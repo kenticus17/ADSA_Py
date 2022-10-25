@@ -29,7 +29,7 @@ def dz(φ):
 
 def dφ(φ, x, z, b, c):
     if  x == 0:
-        return 2*b + c*z - 1
+        return 1/b
     return 2*b + c*z - np.sin(φ)/x
 
 def RK(zmax, b, c, Δs = 1e-4, maxit = 1e8):
