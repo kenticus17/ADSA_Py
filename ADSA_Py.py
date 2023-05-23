@@ -158,7 +158,14 @@ def E(q, U, zmax, Sessile):
         sn = normal_s(X, Z)
         eset[i] = e(sn, X, Z)
     
+    eRange = 2 * np.std(eset)
+    weight = np.where(eset < eRange, 1, 0)
+    if sum(weight)/len(weight)<0.95:
+        weight = np.ones(len(weight))
+    if check_consecutive_zeros(weight):
+        weight = np.ones(len(weight))
     err = sum(weight*eset)
+
     update_q(q, err)
     return err
 
@@ -173,6 +180,21 @@ def Xshift(X, Z, α, x0, z0):
     Ztr = Z - z0
     Xr = Xtr*np.cos(α) - Ztr*np.sin(α)
     return Xr
+
+def check_consecutive_zeros(arr, x=2):
+    # Initialize a counter for consecutive zeros
+    zero_count = 0
+    
+    # Loop over the array and count consecutive zeros
+    for i in range(len(arr)):
+        if arr[i] == 0:
+            zero_count += 1
+        else:
+            zero_count = 0
+        if zero_count >= x:
+            return True
+    
+    return False
 
 def initiallize_q0(U, zmax, Sessile, midSliceFactor = 0.1, nrad=50, cguess=7.09):
 #     print('initializing parameters')
